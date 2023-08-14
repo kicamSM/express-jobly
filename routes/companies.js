@@ -51,8 +51,22 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
  */
 
 router.get("/", async function (req, res, next) {
+  const { name, minEmployees, maxEmployees } = req.query; 
+
+  let data = {"name": name, "minEmployees": minEmployees, "maxEmployees": maxEmployees}
+
+  for(const value in data) {
+    if(data[value] === undefined) {
+      delete data[value]
+    }
+    // console.log("data in for loop:", data)
+  }
+
+  // TODO I want a data object which is = {name: "Walmart", minEmployees: 200, maxEmployees: 1500} but if any of these values are undefined create the object without that key/value pair
+  
   try {
-    const companies = await Company.findAll();
+      const companies = await Company.findAll(data);
+
     return res.json({ companies });
   } catch (err) {
     return next(err);

@@ -6,6 +6,7 @@ function sqlForPartialUpdate(dataToUpdate, jsToSql) {
 // this function is getting passed on object which is our data. The jsToSql is a map from javascript property names. If this is not provided, the Javascript property names in the dataToUpdate will be used as the Coumns. This allows different handlings of names between data and column names. 
   const keys = Object.keys(dataToUpdate);
   // this variable grabs each of the keys from the object dataToUpdate and makes an array from all keys.
+  console.log("dataToUpdate", dataToUpdate)
 
   if (keys.length === 0) throw new BadRequestError("No data");
   // This line throws an error if there are no keys which means that the data that was passed is empty. Returns error "No Data"
@@ -24,15 +25,3 @@ function sqlForPartialUpdate(dataToUpdate, jsToSql) {
 }
 
 module.exports = { sqlForPartialUpdate };
-
-// function sqlForPartialUpdate(dataToUpdate, jsToSql) { 
-//   const keys = Object.keys(dataToUpdate);
-//   if (keys.length === 0) throw new BadRequestError("No data");
-//   const cols = keys.map((colName, idx) =>
-//   `"${jsToSql[colName] || colName}"=$${idx + 1}`,
-// );
-// return {
-//   setCols: cols.join(", "),
-//   values: Object.values(dataToUpdate),
-// };
-// }

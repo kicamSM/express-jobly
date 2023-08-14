@@ -1,6 +1,7 @@
-const jwt = require("jsonwebtoken");
-const { createToken, sqlForPartialUpdate } = require("./sql");
-const { SECRET_KEY } = require("../config");
+// const jwt = require("jsonwebtoken");
+// const { createToken, sqlForPartialUpdate } = require("./sql");
+// const { SECRET_KEY } = require("../config");
+const { sqlForPartialUpdate } = require("./sql");
 const { BadRequestError } = require("../expressError");
 
 
@@ -17,17 +18,13 @@ describe("sqlForPartialUpdate", function () {
 });
 
 test("Returns error for empty object", function () {
-
     const dataToUpdate = {}
     try {
         let sql = sqlForPartialUpdate(dataToUpdate)
-        console.log("sql:", sql)
-        // expect(sql).toEqual(BadRequestError)
     } catch (err) {
         expect(err).toBeInstanceOf(BadRequestError)
         expect(err.message).toEqual("No data")
     }
     });
-
 })
 
