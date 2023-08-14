@@ -5,7 +5,7 @@
 const jsonschema = require("jsonschema");
 const express = require("express");
 
-const { BadRequestError } = require("../expressError");
+const { BadRequestError, ExpressError } = require("../expressError");
 const { ensureLoggedIn } = require("../middleware/auth");
 const Company = require("../models/company");
 
@@ -52,19 +52,25 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
 
 router.get("/", async function (req, res, next) {
   const { name, minEmployees, maxEmployees } = req.query; 
-
-  let data = {"name": name, "minEmployees": parseInt(minEmployees), "maxEmployees": parseInt(maxEmployees)}
-
-  for(const value in data) {
-    if(data[value] === undefined) {
-      delete data[value]
-    }
-    // console.log("data in for loop:", data)
-  }
-
-  // TODO I want a data object which is = {name: "Walmart", minEmployees: 200, maxEmployees: 1500} but if any of these values are undefined create the object without that key/value pair
-  
   try {
+    if (minEmployees !== undefined) {
+      if(minEmployees.includes('-') === true) {
+        throw new ExpressError("Minimum employees must be a positive number!", 400);
+      }
+    }
+    if(maxEmployees !== undefined ) {
+      if(maxEmployees.includes('-') === true) {
+          throw new ExpressError("Maximum employees must be a positive number!", 400);
+      }
+    }
+    let data = {"name": name, "minEmployees": Math.floor(parseInt(minEmployees)), "maxEmployees": Math.floor(parseInt(maxEmployees))}
+  console.log("data:", data)
+    for(let value in data) {
+      if(data[value] === undefined || isNaN(data[value]) === true) {
+        delete data[value]
+      }
+      console.log("data in for loop:", data)
+    }
       const companies = await Company.findAll(data);
 
     return res.json({ companies });

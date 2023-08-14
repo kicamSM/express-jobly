@@ -92,11 +92,11 @@ class Company {
         
         if(sqlString.includes('minEmployees')) {
           
-          sqlString = sqlString.replace('minEmployees=','num_employees > ')
+          sqlString = sqlString.replace('minEmployees=','num_employees >= ')
         }
         if(sqlString.includes('maxEmployees')) {
           
-          sqlString = sqlString.replace('maxEmployees=','num_employees <')
+          sqlString = sqlString.replace('maxEmployees=','num_employees <=')
         }
 
         const companiesRes = await db.query(
