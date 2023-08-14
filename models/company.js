@@ -50,10 +50,7 @@ class Company {
    * */
 
   static async findAll(data) {
-    console.log("data['minEmployees']:", data["minEmployees"])
-    console.log("data['maxEmployees']:", data["maxEmployees"])
-    console.log("RESULT data['maxEmployees'] < data['minEmployees']:", data["maxEmployees"] < data["minEmployees"])
-    
+
     if(data.hasOwnProperty("minEmployees") && data.hasOwnProperty("maxEmployees") && data["minEmployees"] > data["maxEmployees"]) {
       throw new ExpressError('Minimum employees cannot be greater than maximum employees', 400)
     }
@@ -65,31 +62,14 @@ class Company {
     logo_url AS "logoUrl" 
     FROM companies`
 
-    // let newCompQuery = compQuery + " WHERE"
-    // console.log("newCompQuery:", newCompQuery)
-
     if(Object.keys(data).length === 0) {
     let companiesRes = await db.query(compQuery)
-
-      // console.log("IF STATEMENT IS RUNNING")
-      // const companiesRes = await db.query(
-      //   // `SELECT * 
-      //   // FROM companies`);
-      //   `SELECT handle,
-      //      name,
-      //      description,
-      //      num_employees AS "numEmployees",
-      //      logo_url AS "logoUrl" 
-      //      FROM companies`);
-      
       return companiesRes.rows;
 
     } else {
         let newCompQuery = compQuery + " WHERE"
-        console.log("newCompQuery:", newCompQuery)
         let newName = ` ILIKE '%${data["name"]}%'`
         let formattedObj = {};
-        console.log("data:", data)
 
         for (const [key, value] of Object.entries(data)) {
           if (key === "name") {
@@ -99,11 +79,7 @@ class Company {
           }
         }
         const keys = await Object.keys(formattedObj);
-        console.log("keys:", keys)
         const values = await Object.values(formattedObj);
-        console.log("values:", values)
-
-        console.log("formattedObj:", formattedObj)
 
         const jsStrings = keys.map((key, index) => {
           if(key === "name") {
@@ -112,12 +88,7 @@ class Company {
           return ` ${key}=${values[index]}`;
         });
 
-        console.log("jsstrings:", jsStrings)
-        
-     
-
         let sqlString = jsStrings.join(' AND ');
-        console.log('sqlString:', sqlString); 
         
         if(sqlString.includes('minEmployees')) {
           
@@ -128,58 +99,9 @@ class Company {
           sqlString = sqlString.replace('maxEmployees=','num_employees <')
         }
 
-
-        // ! will need to recheck the query the goal is all comapnies where name=name, minEmployees=minEmployees, maxEmployees=maxEmployees WHERE name LIKE '%name%' 
-
-        // ! note you are having a hard time getting the query to return from a name qhich doesnt make any sense.
         const companiesRes = await db.query(
           newCompQuery + sqlString)
-          console.log("companiesRes:", companiesRes)
-            // `SELECT handle,
-            //         name,
-            //         description,
-            //         num_employees AS "numEmployees",
-            //         logo_url AS "logoUrl" 
-            //   FROM companies WHERE ${sqlString}`);
-            
-        //       `SELECT handle,
-        //       name,
-        //       description,
-        //       num_employees AS "numEmployees",
-        //       logo_url AS "logoUrl"
-        // FROM companies WHERE name ILIKE '%smith%' AND num_employees > 500`);
 
-              // const companiesRes = await db.query(
-              //   `SELECT handle,
-              //           name,
-              //           description,
-              //           num_employees AS "numEmployees",
-              //           logo_url AS "logoUrl" 
-              //     FROM companies WHERE name='Bauer-Gallagher'`);
-        
-
-    
-
-    //        `SELECT handle,
-    //        name,
-    //        description,
-    //        num_employees AS "numEmployees",
-    //        logo_url AS "logoUrl" 
-    //  FROM companies
-    //  WHERE (${joinedString})
-    //    RETURNING
-    //    handle,
-    //    name,
-    //    description,
-    //    num_employees AS "numEmployees",
-    //    logo_url AS "logoUrl" 
-    //   ORDER BY name`);
-
-
-
-    // const result = await db.query(querySql, [...values, handle]);
-      //  return "This is returning"
-    // return result.rows;
     return companiesRes.rows;
   }}
 

@@ -53,7 +53,7 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
 router.get("/", async function (req, res, next) {
   const { name, minEmployees, maxEmployees } = req.query; 
 
-  let data = {"name": name, "minEmployees": minEmployees, "maxEmployees": maxEmployees}
+  let data = {"name": name, "minEmployees": parseInt(minEmployees), "maxEmployees": parseInt(maxEmployees)}
 
   for(const value in data) {
     if(data[value] === undefined) {
