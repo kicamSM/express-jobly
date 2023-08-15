@@ -1,8 +1,5 @@
 "use strict";
 
-// ! NOTE WHEN RUNNING THIS FILE USING jest job.test.js --verbose the data is not being entered into my jobly_test database. 
-// ! When I run company.test.js or user.test.js my database is getting filled including the job data 
-
 const { NotFoundError, BadRequestError, UnauthorizedError } = require("../expressError");
 const db = require("../db.js");
 const Job = require("./job.js");
@@ -265,6 +262,15 @@ describe("remove", function () {
     expect(res.rows.length).toEqual(0);
     let allJobs = await db.query(`SELECT id FROM jobs`);
     expect(allJobs.rows.length).toEqual(1)
+  });
+
+  test("error: not found if no such job id", async function () {
+    try {
+      await User.remove(0);
+      fail();
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
   });
 
   test("error: not found if no such job id", async function () {

@@ -56,6 +56,14 @@ class Job {
 
   /** Find all jobs.
    *
+   * can add equity (true/false), and/or title, and/or salary to params
+   * 
+   * salary will return anything >= provided salary
+   * 
+   * equity will return with equity or return all 
+   * 
+   * title will return any title that contains provided characters
+   * 
    * Returns [{ id, title, salary, equity, companyHandle }, ...]
    **/
 
@@ -66,27 +74,29 @@ class Job {
                     equity, 
                     company_handle AS companyHandle
                 FROM jobs`
-    console.log("data:", data)
 
     if(Object.keys(data).length === 0 ) {
         let newJobsQuery = jobsQuery + " ORDER BY title";
-        console.log("newJobsQuery:", newJobsQuery)
-        // ! this is where you are 
         let jobs = await db.query(newJobsQuery)
         return jobs.rows
+
     } else {
+    
         let newJobsQuery = jobsQuery + " WHERE"
-        console.log(newJobsQuery)
         let newTitle = ` ILIKE '%${data["title"]}%'`
         let formattedObj = {};
 
         for (const [key, value] of Object.entries(data)) {
             if (key === "title") {
-              formattedObj[key] = newTitle;
+              formattedObj["title"] = newTitle;
             } else {
               formattedObj[key] = value;
             }
+            if(key === "equity" && formattedObj[key] === "false") {
+                formattedObj["equity"] === null;
+            }
           }
+    
         const keys = await Object.keys(formattedObj);
         const values = await Object.values(formattedObj);
 
@@ -97,14 +107,28 @@ class Job {
         return ` ${key}=${values[index]}`;
         });
         
-        let sqlString = jsStrings.join(' AND ');
-        console.log("sqlString:", sqlString)
-    }
+        let sqlString = jsStrings.join(' AND');
 
+        if(sqlString.includes('title')) {
+            sqlString = sqlString.replace('title=', 'title')
+          }
+        if(sqlString.includes('salary')) {
+            sqlString = sqlString.replace('salary=','salary >= ')
+          }
+          
+        if(sqlString.includes('equity'))
 
-    // return result.rows;
-    return "data is not empty object"
-  }
+        console.log("equity:", data['equity'])
+        if(data['equity'] === "false") {
+            sqlString = sqlString.replace('AND equity=false','')
+        } else {
+            sqlString = sqlString.replace('equity=true','equity > 0')
+        }
+          console.log("sqlString", sqlString)
+        
+        let results = await db.query(newJobsQuery + sqlString)
+        return results.rows;
+    }};
 
   /** Given an id, return data about job.
    *

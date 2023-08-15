@@ -50,15 +50,45 @@ router.post("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
    **/
   
   router.get("/", async function (req, res, next) {
-    console.log("router.get('/', async function is running")
+    // console.log("router.get('/', async function is running")
+    let { title,  salary, equity } = req.query;
+    // console.log("equity", equity)
+    // console.log("equity !== 'true'", equity !== "true")
+    // console.log("equity !== 'false'", equity !== "false")
+    // console.log(equity === undefined)
 
-    const { title,  salary, equity } = req.query;
+  // ! need to fix this still 
+    
+    if(!equity) {
+      equity = "false"
+    }
+
+  console.log("typeof(equity)", typeof(equity))
 
     try {
-      console.log("equity:", !Boolean(equity))
-      if(!Boolean(equity) === false) {
-        throw new BadRequestError("Equity must be a boolean!", 400);
+      if(equity === "true") {
+        console.log("equity is true")
       }
+      if(equity === "false") {
+        console.log("equity is false")
+      }
+      // if(equity === undefined) {
+      //   console.log("equity is undefined")
+      // }
+      // console.log("req.query", req.query)
+      // if(req.query.equity === undefined)
+      // let queryData = req.query
+      // if(equity in queryData) {
+      //   console.log("equity is in req.query")
+      // }
+     console.log("equity", equity)
+      if(equity !== "true" && equity !== "false") {
+        throw new BadRequestError("Equity must be a boolean!", 400);
+      }  
+
+      // if(!Boolean(equity)) {
+      //   throw new BadRequestError("Equity must be a boolean!", 400);
+      // }
 
       let data = {"title": title, "salary": parseInt(salary), "equity": equity}
       // console.log("data:", data)
@@ -77,9 +107,12 @@ router.post("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
       // console.log("data2:", data)
       const jobs = await Job.findAll(data);
       return res.json({ jobs });
-    } catch (err) {
-      return next(err);
-    }
+    // } catch (err) {
+    //   return next(err);
+    
+   } catch (err) {
+        return next(err);
+      }
   });
   
   
