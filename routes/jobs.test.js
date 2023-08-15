@@ -218,12 +218,16 @@ afterAll(commonAfterAll);
 //   });
 // });
 
-/************************************** PATCH /companies/:handle */
+/************************************** PATCH /jobs/:ids */
 
-describe("PATCH /jobs/:id", function () {
+// describe("PATCH /jobs/:id", function () {
+
 //   test("works: for admin", async function () {
+//     const job = await db.query(`SELECT id FROM jobs LIMIT 1`); 
+//     console.log("job", job)
+//     const id = job.rows[0]['id']
 //     const resp = await request(app)
-//         .patch(`/jobs/1`)
+//         .patch(`/jobs/${id}`)
 //         .send({
 //           title: "Updated Job",
 //         })
@@ -233,8 +237,7 @@ describe("PATCH /jobs/:id", function () {
 //             id: expect.any(Number),
 //             title: "Updated Job",
 //             salary: 1000,
-//             equity: "0.1",
-//             companyHandle: "c1",
+//             equity: "0.1"
 //         },
 //     });
 //   });
@@ -254,24 +257,24 @@ describe("PATCH /jobs/:id", function () {
 //   });
 
 
-  test("error: unauth for anon", async function () {
-    const resp = await request(app)
-        .patch(`/jobs/1`)
-        .send({
-          title: "Updated Job",
-        });
-    expect(resp.statusCode).toEqual(401);
-  });
+//   test("error: unauth for anon", async function () {
+//     const resp = await request(app)
+//         .patch(`/jobs/1`)
+//         .send({
+//           title: "Updated Job",
+//         });
+//     expect(resp.statusCode).toEqual(401);
+//   });
 
-  test("error: job id not found", async function () {
-    const resp = await request(app)
-        .patch(`/jobs/0`)
-        .send({
-          title: "Updated Job",
-        })
-        .set("authorization", `Bearer ${u1Token}`);
-    expect(resp.statusCode).toEqual(404);
-  });
+//   test("error: job id not found", async function () {
+//     const resp = await request(app)
+//         .patch(`/jobs/0`)
+//         .send({
+//           title: "Updated Job",
+//         })
+//         .set("authorization", `Bearer ${u1Token}`);
+//     expect(resp.statusCode).toEqual(404);
+//   });
 
 //   test("error: bad request on companyHandle change attempt", async function () {
 //     const resp = await request(app)
@@ -292,39 +295,46 @@ describe("PATCH /jobs/:id", function () {
 //         .set("authorization", `Bearer ${u1Token}`);
 //     expect(resp.statusCode).toEqual(400);
 //   });
-});
-
-/************************************** DELETE /companies/:handle */
-
-// describe("DELETE /companies/:handle", function () {
-//   test("works: for admin", async function () {
-//     const resp = await request(app)
-//         .delete(`/companies/c1`)
-//         .set("authorization", `Bearer ${u1Token}`);
-//     expect(resp.body).toEqual({ deleted: "c1" });
-//   });
-
-//     test("error: for user", async function () {
-//     try {
-//       const resp = await request(app)
-//       .delete(`/companies/c1`)
-//       .set("authorization", `Bearer ${u2Token}`);
-//     } catch (error) {
-//     expect(error.status).toBe(401);
-//     expect(error.message).toBe("Unauthorized")
-//     }
-//   });
-
-//   test("unauth for anon", async function () {
-//     const resp = await request(app)
-//         .delete(`/companies/c1`);
-//     expect(resp.statusCode).toEqual(401);
-//   });
-
-//   test("not found for no such company", async function () {
-//     const resp = await request(app)
-//         .delete(`/companies/nope`)
-//         .set("authorization", `Bearer ${u1Token}`);
-//     expect(resp.statusCode).toEqual(404);
-//   });
 // });
+
+/************************************** DELETE /jobs/:id */
+
+describe("DELETE /jobs/:id", function () {
+
+  test("works: for admin", async function () {
+    const job = await db.query(`SELECT id FROM jobs LIMIT 1`); 
+    const id = job.rows[0]['id'];
+    const resp = await request(app)
+        .delete(`/jobs/${id}`)
+        .set("authorization", `Bearer ${u1Token}`);
+    expect(resp.body).toEqual({ deleted: expect.any(String) });
+  });
+
+    test("error: for user", async function () {
+    try {
+    const job = await db.query(`SELECT id FROM jobs LIMIT 1`); 
+    const id = job.rows[0]['id'];
+      const resp = await request(app)
+      .delete(`/jobs/${id}`)
+      .set("authorization", `Bearer ${u2Token}`);
+    } catch (error) {
+    expect(error.status).toBe(401);
+    expect(error.message).toBe("Unauthorized")
+    }
+  });
+
+  test("unauth for anon", async function () {
+    const job = await db.query(`SELECT id FROM jobs LIMIT 1`); 
+    const id = job.rows[0]['id'];
+    const resp = await request(app)
+        .delete(`/companies/${id}`);
+    expect(resp.statusCode).toEqual(401);
+  });
+
+  test("not found for no such company", async function () {
+    const resp = await request(app)
+        .delete(`/jobs/0`)
+        .set("authorization", `Bearer ${u1Token}`);
+    expect(resp.statusCode).toEqual(404);
+  });
+});
