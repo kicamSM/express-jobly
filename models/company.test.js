@@ -17,166 +17,166 @@ afterAll(commonAfterAll);
 
 /************************************** create */
 
-// describe("create", function () {
-//   const newCompany = {
-//     handle: "new",
-//     name: "New",
-//     description: "New Description",
-//     numEmployees: 1,
-//     logoUrl: "http://new.img",
-//   };
+describe("create", function () {
+  const newCompany = {
+    handle: "new",
+    name: "New",
+    description: "New Description",
+    numEmployees: 1,
+    logoUrl: "http://new.img",
+  };
 
-//   test("works", async function () {
-//     let company = await Company.create(newCompany);
-//     expect(company).toEqual(newCompany);
+  test("works", async function () {
+    let company = await Company.create(newCompany);
+    expect(company).toEqual(newCompany);
 
-//     const result = await db.query(
-//           `SELECT handle, name, description, num_employees, logo_url
-//            FROM companies
-//            WHERE handle = 'new'`);
-//     expect(result.rows).toEqual([
+    const result = await db.query(
+          `SELECT handle, name, description, num_employees, logo_url
+           FROM companies
+           WHERE handle = 'new'`);
+    expect(result.rows).toEqual([
+      {
+        handle: "new",
+        name: "New",
+        description: "New Description",
+        num_employees: 1,
+        logo_url: "http://new.img",
+      },
+    ]);
+  });
+
+  // test("bad request with dupe", async function () {
+  //   try {
+  //     await Company.create(newCompany);
+  //     await Company.create(newCompany);
+  //     fail();
+  //   } catch (err) {
+  //     expect(err instanceof BadRequestError).toBeTruthy();
+  //   }
+  // });
+});
+
+/************************************** findAll */
+
+// describe("findAll", function () {
+//   test("works: no filter", async function () {
+//     let data = {}
+//     let companies = await Company.findAll(data);
+//     expect(companies).toEqual([
 //       {
-//         handle: "new",
-//         name: "New",
-//         description: "New Description",
-//         num_employees: 1,
-//         logo_url: "http://new.img",
+//         handle: "c1",
+//         name: "C1",
+//         description: "Desc1",
+//         numEmployees: 1,
+//         logoUrl: "http://c1.img",
+//       },
+//       {
+//         handle: "c2",
+//         name: "C2",
+//         description: "Desc2",
+//         numEmployees: 2,
+//         logoUrl: "http://c2.img",
+//       },
+//       {
+//         handle: "c3",
+//         name: "C3",
+//         description: "Desc3",
+//         numEmployees: 3,
+//         logoUrl: "http://c3.img",
 //       },
 //     ]);
 //   });
 
-//   test("bad request with dupe", async function () {
-//     try {
-//       await Company.create(newCompany);
-//       await Company.create(newCompany);
-//       fail();
-//     } catch (err) {
-//       expect(err instanceof BadRequestError).toBeTruthy();
-//     }
+//   test("works: with name", async function () {
+//     let data = {name: "C1"}
+//     let companies = await Company.findAll(data);
+//     expect(companies).toEqual([
+//       {
+//         handle: "c1",
+//         name: "C1",
+//         description: "Desc1",
+//         numEmployees: 1,
+//         logoUrl: "http://c1.img",
+//       }
+//     ]);
 //   });
-// });
 
-/************************************** findAll */
+//   test("works: with maxEmployees", async function () {
+//     let data = {maxEmployees: 2}
+//     let companies = await Company.findAll(data);
+//     expect(companies).toEqual([
+//       {
+//         handle: "c1",
+//         name: "C1",
+//         description: "Desc1",
+//         numEmployees: 1,
+//         logoUrl: "http://c1.img",
+//       },
+//       {
+//         handle: "c2",
+//         name: "C2",
+//         description: "Desc2",
+//         numEmployees: 2,
+//         logoUrl: "http://c2.img",
+//       }
+//     ]);
+//   });
 
-describe("findAll", function () {
-  test("works: no filter", async function () {
-    let data = {}
-    let companies = await Company.findAll(data);
-    expect(companies).toEqual([
-      {
-        handle: "c1",
-        name: "C1",
-        description: "Desc1",
-        numEmployees: 1,
-        logoUrl: "http://c1.img",
-      },
-      {
-        handle: "c2",
-        name: "C2",
-        description: "Desc2",
-        numEmployees: 2,
-        logoUrl: "http://c2.img",
-      },
-      {
-        handle: "c3",
-        name: "C3",
-        description: "Desc3",
-        numEmployees: 3,
-        logoUrl: "http://c3.img",
-      },
-    ]);
-  });
+//   test("works: with minEmployees", async function () {
+//     let data = {minEmployees: 2}
+//     let companies = await Company.findAll(data);
+//     expect(companies).toEqual([
+//       {
+//         handle: "c2",
+//         name: "C2",
+//         description: "Desc2",
+//         numEmployees: 2,
+//         logoUrl: "http://c2.img",
+//       }, 
+//       {
+//         handle: "c3",
+//         name: "C3",
+//         description: "Desc3",
+//         numEmployees: 3,
+//         logoUrl: "http://c3.img",
+//       }
+//     ]);
+//   });
 
-  test("works: with name", async function () {
-    let data = {name: "C1"}
-    let companies = await Company.findAll(data);
-    expect(companies).toEqual([
-      {
-        handle: "c1",
-        name: "C1",
-        description: "Desc1",
-        numEmployees: 1,
-        logoUrl: "http://c1.img",
-      }
-    ]);
-  });
+//   test("works: with minEmployees, maxEmployees, name (note name including c not case sensitive)", async function () {
+//     let data = {minEmployees: 2, maxEmployees: 3, name: 'c'}
+//     let companies = await Company.findAll(data);
+//     expect(companies).toEqual([
+//       {
+//         handle: "c2",
+//         name: "C2",
+//         description: "Desc2",
+//         numEmployees: 2,
+//         logoUrl: "http://c2.img",
+//       }, 
+//       {
+//         handle: "c3",
+//         name: "C3",
+//         description: "Desc3",
+//         numEmployees: 3,
+//         logoUrl: "http://c3.img",
+//       }
+//     ]);
+//   });
 
-  test("works: with maxEmployees", async function () {
-    let data = {maxEmployees: 2}
-    let companies = await Company.findAll(data);
-    expect(companies).toEqual([
-      {
-        handle: "c1",
-        name: "C1",
-        description: "Desc1",
-        numEmployees: 1,
-        logoUrl: "http://c1.img",
-      },
-      {
-        handle: "c2",
-        name: "C2",
-        description: "Desc2",
-        numEmployees: 2,
-        logoUrl: "http://c2.img",
-      }
-    ]);
-  });
-
-  test("works: with minEmployees", async function () {
-    let data = {minEmployees: 2}
-    let companies = await Company.findAll(data);
-    expect(companies).toEqual([
-      {
-        handle: "c2",
-        name: "C2",
-        description: "Desc2",
-        numEmployees: 2,
-        logoUrl: "http://c2.img",
-      }, 
-      {
-        handle: "c3",
-        name: "C3",
-        description: "Desc3",
-        numEmployees: 3,
-        logoUrl: "http://c3.img",
-      }
-    ]);
-  });
-
-  test("works: with minEmployees, maxEmployees, name (note name including c not case sensitive)", async function () {
-    let data = {minEmployees: 2, maxEmployees: 3, name: 'c'}
-    let companies = await Company.findAll(data);
-    expect(companies).toEqual([
-      {
-        handle: "c2",
-        name: "C2",
-        description: "Desc2",
-        numEmployees: 2,
-        logoUrl: "http://c2.img",
-      }, 
-      {
-        handle: "c3",
-        name: "C3",
-        description: "Desc3",
-        numEmployees: 3,
-        logoUrl: "http://c3.img",
-      }
-    ]);
-  });
-
-  test("Error: with minEmployees greater than maxEmployees", async function () {
-    let data = {minEmployees: 3, maxEmployees: 2}
-    try {
-      let companies = await Company.findAll(data);
-     } catch (error) {
-        expect(error.name).toBe("Error");
-        expect(error.status).toBe(400);
-        expect(error.message).toBe("Minimum employees cannot be greater than maximum employees");
-    }
+//   test("Error: with minEmployees greater than maxEmployees", async function () {
+//     let data = {minEmployees: 3, maxEmployees: 2}
+//     try {
+//       let companies = await Company.findAll(data);
+//      } catch (error) {
+//         expect(error.name).toBe("Error");
+//         expect(error.status).toBe(400);
+//         expect(error.message).toBe("Minimum employees cannot be greater than maximum employees");
+//     }
     
-  });
+//   });
 
-});
+// });
 
 /************************************** get */
 

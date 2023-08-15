@@ -7,7 +7,6 @@
     "required": [
         "title",
         "salary",
-        "equity",
         "companyHandle"
     ],
     "properties": {
@@ -36,6 +35,7 @@
         },
         "equity": {
             "type": "string",
+            "pattern": "0|(0?\\.[0-9]+)",
             "default": null,
             "title": "The equity Schema",
             "examples": [
@@ -50,6 +50,7 @@
             ]
         }
     },
+    "additionalProperties": false,
     "examples": [{
         "id": 199,
         "title": "Research scientist (medical)",
