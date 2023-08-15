@@ -6,7 +6,7 @@ const jsonschema = require("jsonschema");
 const express = require("express");
 
 const { BadRequestError, ExpressError } = require("../expressError");
-const { ensureLoggedIn } = require("../middleware/auth");
+const { ensureLoggedIn, ensureAdmin } = require("../middleware/auth");
 const Company = require("../models/company");
 
 const companyNewSchema = require("../schemas/companyNew.json");
@@ -24,7 +24,7 @@ const router = new express.Router();
  * Authorization required: login
  */
 
-router.post("/", ensureLoggedIn, async function (req, res, next) {
+router.post("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
   try {
     const validator = jsonschema.validate(req.body, companyNewSchema);
     if (!validator.valid) {
@@ -47,6 +47,10 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
  * - maxEmployees
  * - nameLike (will find case-insensitive, partial matches)
  *
+ * - will throw error on negative numbers if passed in as minEmployee or maxEmployee 
+ * - will handle decimal numbers by flooring them if passed in as minEmployee or maxEmployee
+ * - will handle an extra items in query string not pass them to models
+ * 
  * Authorization required: none
  */
 
@@ -64,14 +68,14 @@ router.get("/", async function (req, res, next) {
       }
     }
     let data = {"name": name, "minEmployees": Math.floor(parseInt(minEmployees)), "maxEmployees": Math.floor(parseInt(maxEmployees))}
-  console.log("data:", data)
+
     for(let value in data) {
       if(data[value] === undefined || isNaN(data[value]) === true) {
         delete data[value]
       }
-      console.log("data in for loop:", data)
     }
-      const companies = await Company.findAll(data);
+
+    const companies = await Company.findAll(data);
 
     return res.json({ companies });
   } catch (err) {
@@ -107,7 +111,9 @@ router.get("/:handle", async function (req, res, next) {
  * Authorization required: login
  */
 
-router.patch("/:handle", ensureLoggedIn, async function (req, res, next) {
+router.patch("/:handle", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
+  console.log("patch route is running")
+//  console.log("req", req.body)
   try {
     const validator = jsonschema.validate(req.body, companyUpdateSchema);
     if (!validator.valid) {
@@ -127,7 +133,7 @@ router.patch("/:handle", ensureLoggedIn, async function (req, res, next) {
  * Authorization: login
  */
 
-router.delete("/:handle", ensureLoggedIn, async function (req, res, next) {
+router.delete("/:handle", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
   try {
     await Company.remove(req.params.handle);
     return res.json({ deleted: req.params.handle });

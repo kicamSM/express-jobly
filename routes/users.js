@@ -37,6 +37,7 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
 
     const user = await User.register(req.body);
     const token = createToken(user);
+    // console.log("token:", token)
     return res.status(201).json({ user, token });
   } catch (err) {
     return next(err);

@@ -44,8 +44,15 @@ class Company {
     return company;
   }
 
-  /** Find all companies.
+  /** Find all companies if no name minEmployee or maxEmployee is passed in
    *
+   * Finds all companies with partial non sensitive name if name is passed into data
+   * Finds all companies that that has a minimum or maxiumum nuber of employees if passed in
+   * 
+   * Handles if minEmployees for a company is greater than maxEmployees by throwing an express error
+   * 
+   * Can put in any combination of of name, minEmployees, or maxEmployees
+   * 
    * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
    * */
 
@@ -144,12 +151,14 @@ class Company {
    */
 
   static async update(handle, data) {
+    console.log("handle and data", handle, data)
     const { setCols, values } = sqlForPartialUpdate(
         data,
         {
           numEmployees: "num_employees",
           logoUrl: "logo_url",
         });
+        console.log("values:", values)
     const handleVarIdx = "$" + (values.length + 1);
 
     const querySql = `UPDATE companies 
