@@ -1,0 +1,34 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "properties": {
+        "title": {
+            "type": "string",
+            "title": "The title Schema",
+            "examples": [
+                "Research scientist (medical)"
+            ]
+        },
+        "salary": {
+            "type": "integer",
+            "title": "The salary Schema",
+            "examples": [
+                175000
+            ]
+        },
+        "equity": {
+            "type": "string",
+            "title": "The equity Schema",
+            "examples": [
+                null
+            ]
+        }
+    },
+    "additionalProperties": false,
+    "examples": [{
+        "title": "Research scientist (medical)",
+        "salary": 175000,
+        "equity": 1.5
+    }]
+}

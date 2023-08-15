@@ -2,12 +2,32 @@ const { BadRequestError } = require("../expressError");
 
 // THIS NEEDS SOME GREAT DOCUMENTATION.
 // This function is updating javascript to SQl when updating either users or companies 
+
+
+  /** Find all companies if no name minEmployee or maxEmployee is passed in
+   *
+   * Finds all companies with partial non sensitive name if name is passed into data
+   * Finds all companies that that has a minimum or maxiumum nuber of employees if passed in
+   * 
+   * Handles if minEmployees for a company is greater than maxEmployees by throwing an express error
+   * 
+   * Can put in any combination of of name, minEmployees, or maxEmployees
+   * 
+   * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
+   * */
+
+
+
+
+
+
 function sqlForPartialUpdate(dataToUpdate, jsToSql) {
-// this function is getting passed on object which is our data. The jsToSql is a map from javascript property names. If this is not provided, the Javascript property names in the dataToUpdate will be used as the Coumns. This allows different handlings of names between data and column names. 
+// this function is getting passed on object which is our data. The jsToSql is a map from javascript property names. If this is not provided, the Javascript property names in the dataToUpdate will be used as the Columns. This allows different handlings of names between data and column names. 
   const keys = Object.keys(dataToUpdate);
   // this variable grabs each of the keys from the object dataToUpdate and makes an array from all keys.
   console.log("dataToUpdate", dataToUpdate)
 
+  
   if (keys.length === 0) throw new BadRequestError("No data");
   // This line throws an error if there are no keys which means that the data that was passed is empty. Returns error "No Data"
 

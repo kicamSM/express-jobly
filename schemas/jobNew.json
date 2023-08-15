@@ -1,0 +1,60 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "title",
+        "salary",
+        "equity",
+        "companyHandle"
+    ],
+    "properties": {
+        "id": {
+            "type": "integer",
+            "title": "The id Schema",
+            "examples": [
+                199
+            ]
+        },
+        "title": {
+            "type": "string",
+            "default": "",
+            "title": "The title Schema",
+            "examples": [
+                "Research scientist (medical)"
+            ]
+        },
+        "salary": {
+            "type": "integer",
+            "default": 0,
+            "title": "The salary Schema",
+            "examples": [
+                175000
+            ]
+        },
+        "equity": {
+            "type": "string",
+            "default": null,
+            "title": "The equity Schema",
+            "examples": [
+                null
+            ]
+        },
+        "companyHandle": {
+            "type": "string",
+            "title": "The companyhandle Schema",
+            "examples": [
+                "norman-harvey"
+            ]
+        }
+    },
+    "examples": [{
+        "id": 199,
+        "title": "Research scientist (medical)",
+        "salary": 175000,
+        "equity": null,
+        "companyhandle": "norman-harvey"
+    }]
+}
