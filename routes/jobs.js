@@ -119,7 +119,7 @@ router.post("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
    * Authorization required: admin
    **/
   
-  router.patch("/:id", ensureAdmin, async function (req, res, next) {
+  router.patch("/:id", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
     console.log("router.patch('/:id' is running")
     try {
       const validator = jsonschema.validate(req.body, jobUpdateSchema);
