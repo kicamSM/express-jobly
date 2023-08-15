@@ -103,43 +103,42 @@ describe("GET /jobs", function () {
             equity: "0.2",
             companyHandle: "c2",
             }
-            
           ],
     });
   });
 
-//   test("works: with title", async function () {
-//     const resp = await request(app).get("/companies?title='J'");
-//     expect(resp.body).toEqual({
-//       companies:
-//           [
-//             {
-//             id: "1",
-//             title: "J1",
-//             salary: "1000",
-//             equity: "0.1",
-//             companyHandle: "c1",
-//             },
-//             {
-//             id: "2",
-//             title: "J2",
-//             salary: "5000",
-//             equity: "0.2",
-//             companyHandle: "c2",
-//             },
-//           ],
-//     });
-//   });
+  test("works: with title", async function () {
+    const resp = await request(app).get("/companies?title=J");
+    expect(resp.body).toEqual({
+      jobs:
+          [
+            {
+            id: expect.any(Number),
+            title: "J1T",
+            salary: "1000",
+            equity: "0.1",
+            companyHandle: "c1",
+            },
+            {
+            id: expect.any(Number),
+            title: "J2T",
+            salary: 5000,
+            equity: "0.2",
+            companyHandle: "c2",
+            },
+          ],
+    });
+  });
 
 //   test("works: with title, equity and salary", async function () {
 //     const resp = await request(app).get("/jobs?title=j&equity=true&salary=1000");
 //     expect(resp.body).toEqual({
-//       companies:
+//       jobs:
 //           [
 //             {
-//                 id: "1",
-//                 title: "J1",
-//                 salary: "1000",
+//                 id: expct.any(Number),
+//                 title: J1T,
+//                 salary: 1000,
 //                 equity: "0.1",
 //                 companyHandle: "c1",
 //             }
@@ -147,28 +146,21 @@ describe("GET /jobs", function () {
 //     });
 //   });
 
-//   test("works: with salary as string", async function () {
-//     const resp = await request(app).get("/jobs?salary=string");
-//     expect(resp.body).toEqual({
-//       companies:
-//           [
-//             {
-//                 id: "1",
-//                 title: "J1",
-//                 salary: "1000",
-//                 equity: "0.1",
-//                 companyHandle: "c1",
-//                 },
-//                 {
-//                 id: "2",
-//                 title: "J2",
-//                 salary: "5000",
-//                 equity: "0.2",
-//                 companyHandle: "c2",
-//             }
-//           ],
-//     });
-//   });
+  test("works: with salary", async function () {
+    const resp = await request(app).get("/jobs?salary=3000");
+    expect(resp.body).toEqual({
+      jobs:
+          [
+                {
+                id: expect.any(Number),
+                title: "J2T",
+                salary: 5000,
+                equity: "0.2",
+                companyHandle: "c2",
+            }
+          ],
+    });
+  });
 
   test("Error: equity as string", async function () {
     try{ const resp = await request(app).get("/jobs?equity=string");
