@@ -51,8 +51,31 @@ router.post("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
   
   router.get("/", async function (req, res, next) {
     console.log("router.get('/', async function is running")
+
+    const { title,  salary, equity } = req.query;
+
     try {
-      const jobs = await Job.findAll();
+      console.log("equity:", !Boolean(equity))
+      if(!Boolean(equity) === false) {
+        throw new BadRequestError("Equity must be a boolean!", 400);
+      }
+
+      let data = {"title": title, "salary": parseInt(salary), "equity": equity}
+      // console.log("data:", data)
+
+      for(let value in data) {
+        if(data[value] === undefined) {
+          delete data[value]
+        }
+
+        if(isNaN(data["salary"]) === true) {
+            console.log("if statement is running")
+            delete data["salary"]
+        }
+      }
+
+      // console.log("data2:", data)
+      const jobs = await Job.findAll(data);
       return res.json({ jobs });
     } catch (err) {
       return next(err);

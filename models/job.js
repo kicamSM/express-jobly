@@ -59,19 +59,51 @@ class Job {
    * Returns [{ id, title, salary, equity, companyHandle }, ...]
    **/
 
-  static async findAll() {
-    console.log("findAll is running")
-    const result = await db.query(
-          `SELECT id,
-                  title,
-                  salary, 
-                  equity, 
-                  company_handle AS companyHandle
-           FROM jobs
-           ORDER BY id`,
-    );
+  static async findAll(data) {
+    let jobsQuery = `SELECT id,
+                     title,
+                    salary, 
+                    equity, 
+                    company_handle AS companyHandle
+                FROM jobs`
+    console.log("data:", data)
 
-    return result.rows;
+    if(Object.keys(data).length === 0 ) {
+        let newJobsQuery = jobsQuery + " ORDER BY title";
+        console.log("newJobsQuery:", newJobsQuery)
+        // ! this is where you are 
+        let jobs = await db.query(newJobsQuery)
+        return jobs.rows
+    } else {
+        let newJobsQuery = jobsQuery + " WHERE"
+        console.log(newJobsQuery)
+        let newTitle = ` ILIKE '%${data["title"]}%'`
+        let formattedObj = {};
+
+        for (const [key, value] of Object.entries(data)) {
+            if (key === "title") {
+              formattedObj[key] = newTitle;
+            } else {
+              formattedObj[key] = value;
+            }
+          }
+        const keys = await Object.keys(formattedObj);
+        const values = await Object.values(formattedObj);
+
+        const jsStrings = keys.map((key, index) => {
+        if(key === "name") {
+            return ` ${key}${values[index]}`
+        }
+        return ` ${key}=${values[index]}`;
+        });
+        
+        let sqlString = jsStrings.join(' AND ');
+        console.log("sqlString:", sqlString)
+    }
+
+
+    // return result.rows;
+    return "data is not empty object"
   }
 
   /** Given an id, return data about job.

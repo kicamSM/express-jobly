@@ -44,7 +44,7 @@
         },
         "companyHandle": {
             "type": "string",
-            "title": "The companyhandle Schema",
+            "title": "The companyHandle Schema",
             "examples": [
                 "norman-harvey"
             ]
@@ -56,6 +56,6 @@
         "title": "Research scientist (medical)",
         "salary": 175000,
         "equity": null,
-        "companyhandle": "norman-harvey"
+        "companyHandle": "norman-harvey"
     }]
 }

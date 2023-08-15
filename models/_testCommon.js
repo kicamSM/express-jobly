@@ -22,7 +22,7 @@ async function commonBeforeAll() {
                           password,
                           first_name,
                           last_name,
-                          emails)
+                          email)
         VALUES ('u1', $1, 'U1F', 'U1L', 'u1@email.com'),
                ('u2', $2, 'U2F', 'U2L', 'u2@email.com')
         RETURNING username`,
@@ -30,14 +30,17 @@ async function commonBeforeAll() {
         await bcrypt.hash("password1", BCRYPT_WORK_FACTOR),
         await bcrypt.hash("password2", BCRYPT_WORK_FACTOR),
       ]);
+  
+  // Force the jobs id to restart at 1.
+  await db.query(`ALTER SEQUENCE jobs_id_seq RESTART;`);
 
   await db.query(`
       INSERT INTO jobs (title,
                         salary,
                         equity,
                         company_handle)
-      VALUES (J1T, 1000, 0.1, 'c1'),
-             (J2T, 5000, 0.2, 'c2')
+      VALUES ('J1T', 1000, 0.1, 'c1'),
+             ('J2T', 5000, 0.2, 'c2')
       RETURNING id`);
 }
 
