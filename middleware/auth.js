@@ -69,6 +69,9 @@ function ensureAdmin(req, res, next) {
 
 function ensureUsersAccountOrAdmin(req, res, next) {
   try {
+    if(res.locals.user === undefined) {
+      throw new UnauthorizedError();
+    }
     let userLoggedIn = res.locals.user.username;
     if (res.locals.user.isAdmin === false && userLoggedIn !== req.params.username) throw new UnauthorizedError();
     return next();

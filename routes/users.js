@@ -70,6 +70,8 @@ router.get("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
  **/
 
 router.get("/:username", ensureUsersAccountOrAdmin, async function (req, res, next) {
+  console.log('router.get("/:username", is running')
+  console.log("req.params.username:", req.params.username)
   try {
     const user = await User.get(req.params.username);
     return res.json({ user });
