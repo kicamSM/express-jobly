@@ -229,7 +229,7 @@ describe("PATCH /jobs/:id", function () {
         })
         .set("authorization", `Bearer ${u1Token}`);
     expect(resp.body).toEqual({
-        {
+        job: {
             id: expect.any(Number),
             title: "Updated Job",
             salary: 1000,
