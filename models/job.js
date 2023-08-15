@@ -72,7 +72,7 @@ class Job {
                      title,
                     salary, 
                     equity, 
-                    company_handle AS companyHandle
+                    company_handle AS "companyHandle"
                 FROM jobs`
 
     if(Object.keys(data).length === 0 ) {

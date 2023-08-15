@@ -50,68 +50,42 @@ router.post("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
    **/
   
   router.get("/", async function (req, res, next) {
-    // console.log("router.get('/', async function is running")
     let { title,  salary, equity } = req.query;
-    // console.log("equity", equity)
-    // console.log("equity !== 'true'", equity !== "true")
-    // console.log("equity !== 'false'", equity !== "false")
-    // console.log(equity === undefined)
 
-  // ! need to fix this still 
+    try {
+
+    if(!equity && !title && !salary) {
+      let data = {}
+      const jobs = await Job.findAll(data);
+      return res.json({ jobs });
+    }
     
     if(!equity) {
       equity = "false"
     }
 
-  console.log("typeof(equity)", typeof(equity))
-
-    try {
-      if(equity === "true") {
-        console.log("equity is true")
-      }
-      if(equity === "false") {
-        console.log("equity is false")
-      }
-      // if(equity === undefined) {
-      //   console.log("equity is undefined")
-      // }
-      // console.log("req.query", req.query)
-      // if(req.query.equity === undefined)
-      // let queryData = req.query
-      // if(equity in queryData) {
-      //   console.log("equity is in req.query")
-      // }
-     console.log("equity", equity)
-      if(equity !== "true" && equity !== "false") {
+    if(equity !== "true" && equity !== "false") {
         throw new BadRequestError("Equity must be a boolean!", 400);
       }  
 
-      // if(!Boolean(equity)) {
-      //   throw new BadRequestError("Equity must be a boolean!", 400);
-      // }
+    let data = {"title": title, "salary": parseInt(salary), "equity": equity}
+    console.log("data", data)
 
-      let data = {"title": title, "salary": parseInt(salary), "equity": equity}
-      // console.log("data:", data)
-
-      for(let value in data) {
-        if(data[value] === undefined) {
-          delete data[value]
-        }
-
-        if(isNaN(data["salary"]) === true) {
-            console.log("if statement is running")
-            delete data["salary"]
-        }
+    for(let value in data) {
+      if(data[value] === undefined) {
+        delete data[value]
       }
 
-      // console.log("data2:", data)
+      if(isNaN(data["salary"]) === true) {
+          console.log("if statement is running")
+          delete data["salary"]
+      }
+    }
       const jobs = await Job.findAll(data);
       return res.json({ jobs });
-    // } catch (err) {
-    //   return next(err);
     
    } catch (err) {
-        return next(err);
+        return next(err);1
       }
   });
   

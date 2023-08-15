@@ -88,22 +88,22 @@ describe("GET /jobs", function () {
     const resp = await request(app).get("/jobs");
     console.log("resp:", resp)
     expect(resp.body).toEqual({
-      companies:
-          [
-            {
-            id: "1",
-            title: "U1F",
-            salary: "1000",
+        jobs:
+          [ {
+            id: expect.any(Number),
+            title: "J1T",
+            salary: 1000,
             equity: "0.1",
             companyHandle: "c1",
             },
             {
-            id: "2",
-            title: "U2F",
-            salary: "5000",
+            id: expect.any(Number),
+            title: "J2T",
+            salary: 5000,
             equity: "0.2",
             companyHandle: "c2",
             }
+            
           ],
     });
   });
