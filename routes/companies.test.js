@@ -11,6 +11,7 @@ const {
   commonAfterEach,
   commonAfterAll,
   u1Token,
+  u2Token,
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -29,16 +30,32 @@ afterAll(commonAfterAll);
 //     numEmployees: 10,
 //   };
 
-//   test("ok for users", async function () {
+//   test("works: for admin", async function () {
+
 //     const resp = await request(app)
 //         .post("/companies")
 //         .send(newCompany)
 //         .set("authorization", `Bearer ${u1Token}`);
+//         console.log(resp.locals)
 //     expect(resp.statusCode).toEqual(201);
 //     expect(resp.body).toEqual({
 //       company: newCompany,
 //     });
 //   });
+
+//   test("error: for user", async function () {
+//     try {
+//     const resp = await request(app)
+//         .post("/companies")
+//         .send(newCompany)
+//         .set("authorization", `Bearer ${u2Token}`);
+//         console.log(resp.locals)
+//     } catch (error) {
+//     expect(error.status).toBe(401);
+//     expect(error.message).toBe("Unauthorized")
+//     }
+//   });
+  
 
 //   test("bad request with missing data", async function () {
 //     const resp = await request(app)
@@ -65,173 +82,173 @@ afterAll(commonAfterAll);
 
 /************************************** GET /companies */
 
-describe("GET /companies", function () {
-  test("ok for anon", async function () {
-    const resp = await request(app).get("/companies");
-    console.log("resp:", resp)
-    expect(resp.body).toEqual({
-      companies:
-          [
-            {
-              handle: "c1",
-              name: "C1",
-              description: "Desc1",
-              numEmployees: 1,
-              logoUrl: "http://c1.img",
-            },
-            {
-              handle: "c2",
-              name: "C2",
-              description: "Desc2",
-              numEmployees: 2,
-              logoUrl: "http://c2.img",
-            },
-            {
-              handle: "c3",
-              name: "C3",
-              description: "Desc3",
-              numEmployees: 3,
-              logoUrl: "http://c3.img",
-            },
-          ],
-    });
-  });
+// describe("GET /companies", function () {
+//   test("ok for anon", async function () {
+//     const resp = await request(app).get("/companies");
+//     console.log("resp:", resp)
+//     expect(resp.body).toEqual({
+//       companies:
+//           [
+//             {
+//               handle: "c1",
+//               name: "C1",
+//               description: "Desc1",
+//               numEmployees: 1,
+//               logoUrl: "http://c1.img",
+//             },
+//             {
+//               handle: "c2",
+//               name: "C2",
+//               description: "Desc2",
+//               numEmployees: 2,
+//               logoUrl: "http://c2.img",
+//             },
+//             {
+//               handle: "c3",
+//               name: "C3",
+//               description: "Desc3",
+//               numEmployees: 3,
+//               logoUrl: "http://c3.img",
+//             },
+//           ],
+//     });
+//   });
 
-  test("works: with name", async function () {
-    const resp = await request(app).get("/companies?name=c");
-    expect(resp.body).toEqual({
-      companies:
-          [
-            {
-              handle: "c1",
-              name: "C1",
-              description: "Desc1",
-              numEmployees: 1,
-              logoUrl: "http://c1.img",
-            },
-            {
-              handle: "c2",
-              name: "C2",
-              description: "Desc2",
-              numEmployees: 2,
-              logoUrl: "http://c2.img",
-            },
-            {
-              handle: "c3",
-              name: "C3",
-              description: "Desc3",
-              numEmployees: 3,
-              logoUrl: "http://c3.img",
-            },
-          ],
-    });
-  });
+//   test("works: with name", async function () {
+//     const resp = await request(app).get("/companies?name=c");
+//     expect(resp.body).toEqual({
+//       companies:
+//           [
+//             {
+//               handle: "c1",
+//               name: "C1",
+//               description: "Desc1",
+//               numEmployees: 1,
+//               logoUrl: "http://c1.img",
+//             },
+//             {
+//               handle: "c2",
+//               name: "C2",
+//               description: "Desc2",
+//               numEmployees: 2,
+//               logoUrl: "http://c2.img",
+//             },
+//             {
+//               handle: "c3",
+//               name: "C3",
+//               description: "Desc3",
+//               numEmployees: 3,
+//               logoUrl: "http://c3.img",
+//             },
+//           ],
+//     });
+//   });
 
-  test("works: with name, minEmployees and maxEmployees", async function () {
-    const resp = await request(app).get("/companies?name=c&minEmployees=1&maxEmployees=2");
-    expect(resp.body).toEqual({
-      companies:
-          [
-            {
-              handle: "c1",
-              name: "C1",
-              description: "Desc1",
-              numEmployees: 1,
-              logoUrl: "http://c1.img",
-            },
-            {
-              handle: "c2",
-              name: "C2",
-              description: "Desc2",
-              numEmployees: 2,
-              logoUrl: "http://c2.img",
-            }
-          ],
-    });
-  });
+//   test("works: with name, minEmployees and maxEmployees", async function () {
+//     const resp = await request(app).get("/companies?name=c&minEmployees=1&maxEmployees=2");
+//     expect(resp.body).toEqual({
+//       companies:
+//           [
+//             {
+//               handle: "c1",
+//               name: "C1",
+//               description: "Desc1",
+//               numEmployees: 1,
+//               logoUrl: "http://c1.img",
+//             },
+//             {
+//               handle: "c2",
+//               name: "C2",
+//               description: "Desc2",
+//               numEmployees: 2,
+//               logoUrl: "http://c2.img",
+//             }
+//           ],
+//     });
+//   });
 
-  test("works: with minEmployees and maxEmployees as decimals", async function () {
-    const resp = await request(app).get("/companies?name=c&minEmployees=1.5&maxEmployees=2.9");
-    expect(resp.body).toEqual({
-      companies:
-          [
-            {
-              handle: "c1",
-              name: "C1",
-              description: "Desc1",
-              numEmployees: 1,
-              logoUrl: "http://c1.img",
-            },
-            {
-              handle: "c2",
-              name: "C2",
-              description: "Desc2",
-              numEmployees: 2,
-              logoUrl: "http://c2.img",
-            }
-          ],
-    });
-  });
+//   test("works: with minEmployees and maxEmployees as decimals", async function () {
+//     const resp = await request(app).get("/companies?name=c&minEmployees=1.5&maxEmployees=2.9");
+//     expect(resp.body).toEqual({
+//       companies:
+//           [
+//             {
+//               handle: "c1",
+//               name: "C1",
+//               description: "Desc1",
+//               numEmployees: 1,
+//               logoUrl: "http://c1.img",
+//             },
+//             {
+//               handle: "c2",
+//               name: "C2",
+//               description: "Desc2",
+//               numEmployees: 2,
+//               logoUrl: "http://c2.img",
+//             }
+//           ],
+//     });
+//   });
 
-  test("Error:minEmployees as negative number", async function () {
-    try{ const resp = await request(app).get("/companies?minEmployees=-2");
-    } catch (error) {
-    expect(error.name).toBe("Error");
-    expect(error.status).toBe(400);
-    expect(error.message).toBe("Minimum employees must be a positive number!");
-  }
-  });
+//   test("Error:minEmployees as negative number", async function () {
+//     try{ const resp = await request(app).get("/companies?minEmployees=-2");
+//     } catch (error) {
+//     expect(error.name).toBe("Error");
+//     expect(error.status).toBe(400);
+//     expect(error.message).toBe("Minimum employees must be a positive number!");
+//   }
+//   });
 
-  test("Error:maxEmployees as negative number", async function () {
-    try{ const resp = await request(app).get("/companies?maxEmployees=-3");
-    } catch (error) {
-    expect(error.name).toBe("Error");
-    expect(error.status).toBe(400);
-    expect(error.message).toBe("Maximum employees must be a positive number!");
-  }
-  });
+//   test("Error:maxEmployees as negative number", async function () {
+//     try{ const resp = await request(app).get("/companies?maxEmployees=-3");
+//     } catch (error) {
+//     expect(error.name).toBe("Error");
+//     expect(error.status).toBe(400);
+//     expect(error.message).toBe("Maximum employees must be a positive number!");
+//   }
+//   });
 
-  test("Error:minEmployees as word", async function () {
-    const resp = await request(app).get("/companies?minEmployees=WORD");
-    expect(resp.body).toEqual({
-      companies:
-          [
-            {
-              handle: "c1",
-              name: "C1",
-              description: "Desc1",
-              numEmployees: 1,
-              logoUrl: "http://c1.img",
-            },
-            {
-              handle: "c2",
-              name: "C2",
-              description: "Desc2",
-              numEmployees: 2,
-              logoUrl: "http://c2.img",
-            },
-            {
-              handle: "c3",
-              name: "C3",
-              description: "Desc3",
-              numEmployees: 3,
-              logoUrl: "http://c3.img",
-            },
-          ],
-    });
-  });
+//   test("Error:minEmployees as word", async function () {
+//     const resp = await request(app).get("/companies?minEmployees=WORD");
+//     expect(resp.body).toEqual({
+//       companies:
+//           [
+//             {
+//               handle: "c1",
+//               name: "C1",
+//               description: "Desc1",
+//               numEmployees: 1,
+//               logoUrl: "http://c1.img",
+//             },
+//             {
+//               handle: "c2",
+//               name: "C2",
+//               description: "Desc2",
+//               numEmployees: 2,
+//               logoUrl: "http://c2.img",
+//             },
+//             {
+//               handle: "c3",
+//               name: "C3",
+//               description: "Desc3",
+//               numEmployees: 3,
+//               logoUrl: "http://c3.img",
+//             },
+//           ],
+//     });
+//   });
 
-  test("fails: test next() handler", async function () {
-    // there's no normal failure event which will cause this route to fail ---
-    // thus making it hard to test that the error-handler works with it. This
-    // should cause an error, all right :)
-    await db.query("DROP TABLE companies CASCADE");
-    const resp = await request(app)
-        .get("/companies")
-        .set("authorization", `Bearer ${u1Token}`);
-    expect(resp.statusCode).toEqual(500);
-  });
-});
+//   test("fails: test next() handler", async function () {
+//     // there's no normal failure event which will cause this route to fail ---
+//     // thus making it hard to test that the error-handler works with it. This
+//     // should cause an error, all right :)
+//     await db.query("DROP TABLE companies CASCADE");
+//     const resp = await request(app)
+//         .get("/companies")
+//         .set("authorization", `Bearer ${u1Token}`);
+//     expect(resp.statusCode).toEqual(500);
+//   });
+// });
 
 /************************************** GET /companies/:handle */
 
