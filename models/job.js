@@ -74,10 +74,13 @@ class Job {
                     equity, 
                     company_handle AS "companyHandle"
                 FROM jobs`
-
-    if(Object.keys(data).length === 0 ) {
+    console.log("data", data)
+    // console.log('!!!!!!!!!!1', Object.keys(data))
+    // if(Object.keys(data).length === 0 ) {
+    if(data === undefined || Object.keys(data).length === 0) {
         let newJobsQuery = jobsQuery + " ORDER BY title";
         let jobs = await db.query(newJobsQuery)
+        console.log("jobs", jobs)
         return jobs.rows
 
     } else {
