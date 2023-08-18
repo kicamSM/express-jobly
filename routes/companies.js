@@ -83,7 +83,7 @@ router.get("/", async function (req, res, next) {
   }
 });
 
-/** GET /[handle]  =>  { "company": {handle, name, description, numEmployees, logoUrl}, "jobs": [{ title, salary, equity }, ...] }
+/** GET /[handle]  =>  { "company": {handle, name, description, numEmployees, logoUrl,  "jobs": [{ title, salary, equity }, ...] }
  *
  *
  * Authorization required: none
@@ -92,9 +92,9 @@ router.get("/", async function (req, res, next) {
 router.get("/:handle", async function (req, res, next) {
 
   try {
-    const Results = await Company.getCompJobs(req.params.handle)
+    const company = await Company.getCompJobs(req.params.handle)
 
-    return res.json({ Results });
+    return res.json({ company });
   } catch (err) {
     return next(err);
   }

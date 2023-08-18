@@ -140,7 +140,7 @@ class Company {
 
   /** GET company with job data 
    * 
-   * Returns company: "company": { handle, name, description, numEmployees, logoUrl }, "jobs": [{ jobs: { title, salary, equity}, ....}]
+   * Returns company: "company": { handle, name, description, numEmployees, logoUrl, "jobs": [{ jobs: { title, salary, equity}, ....}]
    */
 
   static async getCompJobs(handle) {
@@ -150,11 +150,15 @@ class Company {
     const compQuery = `SELECT handle, name, description, num_employees AS "numEmployees", logo_url AS "logoUrl" FROM companies WHERE handle = '${handle}'`
 
     const companyRes = await db.query(compQuery)
-    const company = companyRes.rows[0]
     const jobsRes = await db.query(jobQuery)
     const jobs = jobsRes.rows
+    const results = companyRes.rows[0]
+    Object.assign( results, {jobs: jobs})
 
-    return {company: company, jobs}
+    // console.log("company!!!!!!!!!!", company)
+   
+
+    return results
   }
 
   /** Update company data with `data`.
