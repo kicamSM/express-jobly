@@ -102,7 +102,7 @@ class User {
    **/
 
   static async findAll() {
-    const result = await db.query(
+    const usersRes = await db.query(
           `SELECT username,
                   first_name AS "firstName",
                   last_name AS "lastName",
@@ -112,18 +112,21 @@ class User {
            ORDER BY username`,
     );
 
-    return result.rows;
+    const users = usersRes.rows
+
+    return users
   }
 
-  /** Given a username, return data about user.
+  /** Given a username, return data about user including the job the user has applied for.
    *
    * Returns { username, first_name, last_name, is_admin, jobs }
-   *   where jobs is { id, title, company_handle, company_name, state }
+   *   where jobs is array of ids that user has applied for
    *
    * Throws NotFoundError if user not found.
    **/
 
   static async get(username) {
+
     const userRes = await db.query(
           `SELECT username,
                   first_name AS "firstName",
@@ -139,7 +142,18 @@ class User {
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
 
-    return user;
+    const jobIdsRes =  await db.query(`SELECT 
+                      applications.job_id AS "jobId" 
+                      FROM applications 
+                      JOIN users ON applications.username = users.username
+                      WHERE applications.username = '${username}'`,
+         );
+
+    const jobIds = jobIdsRes.rows.map(id => id.jobId );
+
+    const result = Object.assign(user, {jobs: jobIds})
+
+    return result;
   }
 
   /** Update user data with `data`.

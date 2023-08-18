@@ -4,9 +4,7 @@
 
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../config");
-const { UnauthorizedError } = require("../expressError");
-
-// TODO: get requests for companies everyone - creating, updating, and deleting companies should only be possible by is_admin flag 
+const { UnauthorizedError } = require("../expressError"); 
 
 /** Middleware: Authenticate user.
  *
