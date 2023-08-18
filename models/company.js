@@ -138,6 +138,25 @@ class Company {
     return company;
   }
 
+  /** GET company with job data 
+   * 
+   * Returns company: "company": { handle, name, description, numEmployees, logoUrl }, "jobs": [{ jobs: { title, salary, equity}, ....}]
+   */
+
+  static async getCompJobs(handle) {
+
+    const jobQuery = `SELECT title, salary, equity FROM jobs WHERE company_handle = '${handle}'`
+
+    const compQuery = `SELECT handle, name, description, num_employees AS "numEmployees", logo_url AS "logoUrl" FROM companies WHERE handle = '${handle}'`
+
+    const companyRes = await db.query(compQuery)
+    const company = companyRes.rows[0]
+    const jobsRes = await db.query(jobQuery)
+    const jobs = jobsRes.rows
+
+    return {company: company, jobs}
+  }
+
   /** Update company data with `data`.
    *
    * This is a "partial update" --- it's fine if data doesn't contain all the
