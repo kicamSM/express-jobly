@@ -204,6 +204,26 @@ class User {
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
   }
+
+  static async apply(username, id) {
+    console.log("apply is running")
+    // let query = (`INSERT INTO applications (username, job_id) VALUES ($1, $2)`, [username, id])
+    // console.log("query", query)
+    console.log("id", id)
+    let job_id = +id
+    const result = await db.query(`INSERT INTO applications (username, job_id) VALUES ($1, $2)`, [username, job_id])
+    console.log("result", result)
+
+    const applied = {applied: id}
+    console.log("!!!!!!!!!!!!!!!!!!!!", applied)
+    
+    if (!username) throw new NotFoundError(`No username: ${username}`);
+    if (!id) throw new NotFoundError(`No job id: ${id}`);
+
+    
+    return applied
+  }
+
 }
 
 

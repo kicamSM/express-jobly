@@ -69,8 +69,10 @@ function ensureAdmin(req, res, next) {
  * If not, raises Unauthorized 
  */
 
-function ensureUsersAccountOrAdmin(req, res, next) {
+function ensureUsersAccountOrAdmin(req, res, next) { 
+
   try {
+
     if(res.locals.user === undefined) {
       throw new UnauthorizedError();
     }
