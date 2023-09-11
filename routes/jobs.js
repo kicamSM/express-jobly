@@ -69,7 +69,6 @@ router.post("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
       }  
 
     let data = {"title": title, "salary": parseInt(salary), "equity": equity}
-    console.log("data", data)
 
     for(let value in data) {
       if(data[value] === undefined) {

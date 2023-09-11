@@ -57,6 +57,7 @@ class Company {
    * */
 
   static async findAll(data) {
+    console.log("!!!!data!!!!:", data)
 
     if(data.hasOwnProperty("minEmployees") && data.hasOwnProperty("maxEmployees") && data["minEmployees"] > data["maxEmployees"]) {
       throw new ExpressError('Minimum employees cannot be greater than maximum employees', 400)
@@ -69,14 +70,20 @@ class Company {
     logo_url AS "logoUrl" 
     FROM companies`
 
+  
     if(Object.keys(data).length === 0) {
+     
     let companiesRes = await db.query(compQuery)
       return companiesRes.rows;
+      // *if data is empty then we are just returning all companies 
+
 
     } else {
         let newCompQuery = compQuery + " WHERE"
         let newName = ` ILIKE '%${data["name"]}%'`
+        console.log('newName:', newName)
         let formattedObj = {};
+        // *otherwise formatting query for name 
 
         for (const [key, value] of Object.entries(data)) {
           if (key === "name") {
@@ -105,6 +112,8 @@ class Company {
           
           sqlString = sqlString.replace('maxEmployees=','num_employees <=')
         }
+        console.log("compQuery3:", compQuery)
+        console.log("newCompQuery:", newCompQuery)
 
         const companiesRes = await db.query(
           newCompQuery + sqlString)

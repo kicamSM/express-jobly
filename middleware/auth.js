@@ -43,17 +43,20 @@ function ensureLoggedIn(req, res, next) {
   }
 }
 
+// ? Also how do we know that bearer should be in front of my authorization code?
+
 /** Middleware to use when they must be logged in AND an admin.
  * 
  * If not, raises Unauthorized. 
  */
 
 function ensureAdmin(req, res, next) {
+  // ? Question will eevrything for authorization always be under res.locals??? Is this standard? I originally ran into the issue where I had a harad time finding the authorization. 
+  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!res:", res)
+  console.log("*************************res.locals:", res.locals)
+  console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&res.locals.user:", res.locals.user)
 
   try {
-    // if(!res.local) {
-    //   throw new UnauthorizedError()
-    // }
 
     if (res.locals.user.isAdmin === false) throw new UnauthorizedError();
     return next();
@@ -70,7 +73,6 @@ function ensureAdmin(req, res, next) {
 function ensureUsersAccountOrAdmin(req, res, next) { 
 
   try {
-
     if(res.locals.user === undefined) {
       throw new UnauthorizedError();
     }

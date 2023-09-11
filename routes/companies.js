@@ -24,6 +24,8 @@ const router = new express.Router();
  * Authorization required: login
  */
 
+// *ensureLoggedIn is authorization and ensureAdmin is also authorization
+
 router.post("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
   try {
     const validator = jsonschema.validate(req.body, companyNewSchema);
@@ -54,27 +56,38 @@ router.post("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
  * Authorization required: none
  */
 
+// *no authorization required for this 
+
 router.get("/", async function (req, res, next) {
   const { name, minEmployees, maxEmployees } = req.query; 
+
   try {
+    // ? this next two chunks of code seem reduntant and seem like I should be able to condense them? Maybe I am wrong
+    
     if (minEmployees !== undefined) {
       if(minEmployees.includes('-') === true) {
         throw new ExpressError("Minimum employees must be a positive number!", 400);
       }
+      // *handling negative numbers
     }
     if(maxEmployees !== undefined ) {
       if(maxEmployees.includes('-') === true) {
           throw new ExpressError("Maximum employees must be a positive number!", 400);
       }
+      // *handling negative numbers
     }
     let data = {"name": name, "minEmployees": Math.floor(parseInt(minEmployees)), "maxEmployees": Math.floor(parseInt(maxEmployees))}
+    // *creating object data turning MaxEmployees and minEmployees to integer and rounding them
 
     for(let value in data) {
-      if(data[value] === undefined || isNaN(data[value]) === true) {
+      if(data[value] === undefined || typeof data[value] !== "string" && isNaN(data[value]) === true) {
         delete data[value]
       }
-    }
+      
 
+      // ! Note that you fixed this. You had put if NaN which didnt work because it was deleting name
+      // *gettning rid of any values that dont match criteria i.e. minEmployees must be a number and
+    }
     const companies = await Company.findAll(data);
 
     return res.json({ companies });
@@ -108,8 +121,10 @@ router.get("/:handle", async function (req, res, next) {
  *
  * Returns { handle, name, description, numEmployees, logo_url }
  *
- * Authorization required: login
+ * *Authorization required: loggedIn and isAdmin
  */
+
+
 
 router.patch("/:handle", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
   console.log("patch route is running")
@@ -130,7 +145,7 @@ router.patch("/:handle", ensureLoggedIn, ensureAdmin, async function (req, res, 
 
 /** DELETE /[handle]  =>  { deleted: handle }
  *
- * Authorization: login
+ *  *Authorization required: loggedIn and isAdmin
  */
 
 router.delete("/:handle", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
